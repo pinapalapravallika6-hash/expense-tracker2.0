@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Tracker 2.0</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f3f4fa;
+  color: #20243a;
+  padding: 25px;
+}
+
+.container {
+  max-width: 1050px;
+  margin: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+header h1 {
+  color: #5145cd;
+  font-size: 27px;
+}
+
+header p {
+  color: #777;
+  margin-top: 7px;
+}
+
+.version {
+  background: #e7e4ff;
+  color: #5145cd;
+  padding: 9px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: white;
+  padding: 23px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px #00000008;
+}
+
+.card p {
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.card h2 {
+  font-size: 25px;
+}
+
+.balance {
+  background: #5145cd;
+  color: white;
+}
+
+.balance p {
+  color: #e0ddff;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 20px;
+}
+
+.panel {
+  background: white;
+  padding: 23px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px #00000008;
+}
+
+.panel h2 {
+  margin-bottom: 20px;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  background: white;
+}
+
+input:focus, select:focus {
+  border-color: #5145cd;
+}
+
+button {
+  border: none;
+  padding: 13px;
+  border-radius: 8px;
+  background: #5145cd;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-btn {
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.filters button {
+  background: #eeeefe;
+  color: #5145cd;
+  padding: 9px 13px;
+}
+
+.filters button.active {
+  background: #5145cd;
+  color: white;
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+  gap: 10px;
+}
+
+.transaction small {
+  color: #888;
+  display: block;
+  margin-top: 5px;
+}
+
+.amount {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.income {
+  color: #159b65;
+}
+
+.expense {
+  color: #e34c64;
+}
+
+.delete-btn {
+  background: #ffe9ec;
+  color: #df4058;
+  padding: 7px 10px;
+  margin-left: 7px;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 25px 0;
+}
+
+@media(max-width: 700px) {
+  body {
+    padding: 15px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <div>
+    <h1>My Finance Dashboard</h1>
+    <p>Manage your money smartly.</p>
+  </div>
+  <span class="version">VERSION 2.0</span>
+</header>
+
+<section class="cards">
+
+  <div class="card balance">
+    <p>Total Balance</p>
+    <h2 id="balance">₹0.00</h2>
+  </div>
+
+  <div class="card">
+    <p>Total Income</p>
+    <h2 class="income" id="income">₹0.00</h2>
+  </div>
+
+  <div class="card">
+    <p>Total Expenses</p>
+    <h2 class="expense" id="expenses">₹0.00</h2>
+  </div>
+
+</section>
+
+<section class="content">
+
+  <div class="panel">
+    <h2>Add Transaction</h2>
+
+    <form id="transactionForm">
+
+      <input
+        type="text"
+        id="title"
+        placeholder="Transaction name"
+        required
+      >
+
+      <input
+        type="number"
+        id="amount"
+        placeholder="Amount in ₹"
+        min="0.01"
+        step="0.01"
+        required
+      >
+
+      <select id="type">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+
+      <select id="category">
+        <option>Food</option>
+        <option>Shopping</option>
+        <option>Travel</option>
+        <option>Education</option>
+        <option>Bills</option>
+        <option>Salary</option>
+        <option>Other</option>
+      </select>
+
+      <button type="submit" class="add-btn">
+        + Add Transaction
+      </button>
+
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Transactions</h2>
+
+    <div class="filters">
+      <button class="active" data-filter="all">All</button>
+      <button data-filter="income">Income</button>
+      <button data-filter="expense">Expenses</button>
+    </div>
+
+    <div id="transactionList"></div>
+  </div>
+
+</section>
+</div>
+
+<script>
+
+let transactions = JSON.parse(
+  localStorage.getItem("expenseTracker2")
+) || [];
+
+let currentFilter = "all";
+
+const form = document.getElementById("transactionForm");
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const title = document.getElementById("title").value.trim();
+  const amount = Number(document.getElementById("amount").value);
+  const type = document.getElementById("type").value;
+  const category = document.getElementById("category").value;
+
+  if (!title || !Number.isFinite(amount) || amount <= 0) {
+    alert("Please enter a valid name and amount.");
+    return;
+  }
+
+  transactions.unshift({
+    id: Date.now(),
+    title,
+    amount,
+    type,
+    category,
+    date: new Date().toLocaleDateString()
+  });
+
+  saveData();
+  form.reset();
+});
+
+function saveData() {
+  localStorage.setItem(
+    "expenseTracker2",
+    JSON.stringify(transactions)
+  );
+  render();
+}
+
+function render() {
+  let income = 0;
+  let expenses = 0;
+
+  transactions.forEach(function(item) {
+    if (item.type === "income") {
+      income += item.amount;
+    } else {
+      expenses += item.amount;
+    }
+  });
+
+  document.getElementById("income").textContent =
+    "₹" + income.toFixed(2);
+
+  document.getElementById("expenses").textContent =
+    "₹" + expenses.toFixed(2);
+
+  document.getElementById("balance").textContent =
+    "₹" + (income - expenses).toFixed(2);
+
+  const list = document.getElementById("transactionList");
+
+  const filtered = transactions.filter(function(item) {
+    return currentFilter === "all" ||
+           item.type === currentFilter;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML =
+      '<p class="empty">No transactions yet. Add one!</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(item) {
+    const sign = item.type === "income" ? "+" : "-";
+    const color = item.type === "income" ? "income" : "expense";
+
+    return `
+      <div class="transaction">
+        <div>
+          <strong>${escapeHTML(item.title)}</strong>
+          <small>${escapeHTML(item.category)} • ${escapeHTML(item.date)}</small>
+        </div>
+
+        <div>
+          <span class="amount ${color}">
+            ${sign}₹${item.amount.toFixed(2)}
+          </span>
+          <button class="delete-btn"
+            onclick="deleteTransaction(${item.id})">
+            Delete
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[char];
+  });
+}
+
+function deleteTransaction(id) {
+  transactions = transactions.filter(function(item) {
+    return item.id !== id;
+  });
+  saveData();
+}
+
+document.querySelectorAll(".filters button").forEach(function(button) {
+  button.addEventListener("click", function() {
+    currentFilter = button.dataset.filter;
+
+    document.querySelectorAll(".filters button").forEach(function(btn) {
+      btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    render();
+  });
+});
+
+render();
+
+</script>
+
+</body>
+</html>
